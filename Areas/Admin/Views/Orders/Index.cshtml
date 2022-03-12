@@ -1,0 +1,129 @@
+﻿@using PagedList.Core.Mvc
+@model PagedList.Core.IPagedList<HShopping.Models.Orders>
+
+@{
+    int currentpage = ViewBag.CurrentPage;
+    ViewData["Title"] = "Quản lý đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_Admin_Layout.cshtml";
+}
+
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+            <a class="breadcrumb-item">Danh sách đơn hàng : </a>
+        </nav>
+    </div>
+</div>
+<h2 class="header-title">Danh sách đơn hàng</h2>
+<p>
+    <a class="btn btn-primary btn-tone m-r-10" role="button" asp-action="Create" asp-area="Admin" asp-controller="Orders">Tạo mới đơn hàng</a>
+</p>
+<div class="main-content">
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <div class="d-md-flex">
+                    <div class="col-md-2">
+                        @*                        <div class="m-v-10">
+                                <select class="custom-select" style="min-width: 180px;" id="txtcatid" name="txtcatid" asp-items="ViewBag.Danhmucsanpham">
+                                    <option value="1" disabled selected>Lọc....</option>
+                                </select>
+                            </div>*@
+             
+                            <div class="input-affix m-v-10">
+                                <i class="prefix-icon anticon anticon-search opacity-04"></i>
+                                <input id="keyword" name="keyword" type="text" class="form-control" placeholder=" Tìm kiếm đơn hàng ">
+                            </div>
+        
+                    </div>
+                </div>
+                <table class="table table-hover e-commerce-table table-hover table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Ngày tạo đơn</th>
+                            <th>Ngày thanh toán</th>
+                            <th>Tổng tiền</th>
+                            <th>Đã thanh toán chưa</th>
+                            <th>Ghi chú </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="records_table">
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.OrderId
+                                    </td>
+                                    <td>@item.OrderDate</td>
+                                    <td>
+                                        @item.PaymentDate
+                                    </td>
+                                    <td> @item.TotalMoney</td>
+
+
+                                    <td>
+                                        @if (item.Paid == true)
+                                        {<div class="d-flex align-items-center">
+                                                <div class="badge badge-success badge-dot m-r-5"></div>
+                                                <div>Đã thanh toán</div>
+                                            </div>}
+                                        else
+                                        {
+                                            <div class="d-flex align-items-center justify-content-start">
+                                                <div class="badge badge-danger badge-dot m-r-5 "></div>
+                                                <div>Chưa thanh toán</div>
+                                            </div>
+                                        }
+
+                                    </td>
+                                    <td>
+                                        @item.Note
+                                    </td>
+                                    <td class="text-right">
+                                        <a class="btn btn-primary btn-tone m-r-5 " role="button" asp-action="Edit" asp-route-id="@item.OrderId" asp-area="Admin" asp-controller="Orders">Edit</a>
+                                        <a class="btn btn-secondary btn-tone m-r-5 " role="button" asp-action="Details" asp-route-id="@item.OrderId" asp-area="Admin" asp-controller="Orders">Details</a>
+                                        <a class="btn btn-success btn-tone m-r-5" role="button" asp-action="Delete" asp-route-id="@item.OrderId" asp-area="Admin" asp-controller="Orders">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+                                <div aria-label="Page navigation example ">
+                        <ul class="pagination">
+                            <pager class="p-xxl-9" list="@Model" asp-area="Admin" asp-controller="Orders" asp-action="Index"></pager>
+                        </ul>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts
+
+{
+    <script>
+        $("#keyword").keyup(function () {
+            var strkeyword = $('#keyword').val();
+            $.ajax({
+                url: '/Admin/Search/FindOrders/',
+                datatype: "json",
+                type: "POST",
+                data: { keyword: strkeyword },
+                async: true,
+                success: function (results) {
+                    $("#records_table").html("");
+                    $("#records_table").html(results);
+                },
+                error: function (xhr) {
+                    alert('error');
+                }
+            });
+        });
+    </script>
+}

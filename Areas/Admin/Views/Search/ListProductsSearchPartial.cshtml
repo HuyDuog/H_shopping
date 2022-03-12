@@ -1,0 +1,43 @@
+﻿@model List<Products>
+
+@if (Model != null)
+{
+    foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.ProductId
+            </td>
+            <td>@item.Thumb</td>
+            <td>
+                @item.ProductName
+            </td>
+            <td>@item.ShortDesc</td>
+
+            <td>
+                @item.Price  VND
+            </td>
+            <td>@item.Discount</td>
+            <td>
+                @if (item.UnitsInStock > 0)
+                {<div class="d-flex align-items-center">
+                        <div class="badge badge-success badge-dot m-r-10"></div>
+                        <div>In stock</div>
+                    </div>}
+                else
+                {
+                    <div class="d-flex align-items-center justify-content-start">
+                        <div class="badge badge-danger badge-dot m-r-10 "></div>
+                        <div>Out stock</div>
+                    </div>
+                }
+
+            </td>
+            <td class="text-right">
+                <a class="btn btn-primary btn-tone m-r-5" role="button" asp-action="Edit" asp-route-id="@item.ProductId" asp-area="Admin" asp-controller="Products">Edit</a>
+                <a class="btn btn-secondary btn-tone m-r-5" role="button" asp-action="Details" asp-route-id="@item.ProductId" asp-area="Admin" asp-controller="Products">Details</a>
+                <a class="btn btn-success btn-tone m-r-5" role="button" asp-action="Delete" asp-route-id="@item.ProductId" asp-area="Admin" asp-controller="Products">Delete</a>
+            </td>
+        </tr>
+    }
+}

@@ -1,0 +1,114 @@
+﻿@using PagedList.Core.Mvc
+@model PagedList.Core.IPagedList<HShopping.Models.Categories>
+
+@{
+    int currentpage = ViewBag.CurrentPage;
+    ViewData["Title"] = "Danh sách danh mục sản phẩm" ;
+    Layout = "~/Areas/Admin/Views/Shared/_Admin_Layout.cshtml";
+}
+
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+            <a class="breadcrumb-item">Danh sách danh mục sản phẩm : page @currentpage</a>
+        </nav>
+    </div>
+</div>
+<h1>Danh sách danh mục sản phẩm</h1>
+
+<p>
+    <a class="btn btn-primary btn-tone m-r-10" role="button" asp-action="Create" asp-area="Admin" asp-controller="Categories">Tạo mới</a>
+</p>
+<div class="main-content">
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <div class="d-md-flex">
+                    <div class="m-b-10 m-r-15">
+                        <select class="custom-select" style="min-width: 180px;" id="txtcatid" name="txtcatid" asp-items="ViewBag.Category">
+                            <option value="" disabled selected>Lọc....</option>
+                        </select>
+                    </div>
+                </div>
+                <table class="table table-hover e-commerce-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Ảnh</th>
+                            <th>Tên danh mục</th>
+                            <th>Mô tả</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.CatId
+                                    </td>
+                                     <td>@item.Thumb</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img class="img-fluid rounded" src="~/assets/images/others/thumb-9.jpg" style="max-width: 60px" alt="">
+                                            <h6 class="m-b-0 m-l-10">@item.CatName</h6>
+                                        </div>
+                                    </td>
+                                    <td>@item.Description</td>
+                                    <td class="text-right">
+                                        <a class="btn btn-primary btn-tone m-r-5" role="button" asp-action="Edit" asp-route-id="@item.CatId" asp-area="Admin" asp-controller="Categories">Edit</a>
+                                        <a class="btn btn-secondary btn-tone m-r-5" role="button" asp-action="Details" asp-route-id="@item.CatId" asp-area="Admin" asp-controller="Categories">Details</a>
+                                        <a class="btn btn-success btn-tone m-r-5" role="button" asp-action="Delete" asp-route-id="@item.CatId" asp-area="Admin" asp-controller="Categories">Delete</a>
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+                <div aria-label="Page navigation example ">
+                    <ul class="pagination">
+                        <pager class="p-xxl-9" list="@Model" asp-area="Admin" asp-controller="Categories" asp-action="Index"></pager>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+    $(document).ready(function () {
+        jQuery("#txtcatid").change(function () {
+            var catId = jQuery(this).children(":selected").attr("value");
+            catId = parseFloat(catId);
+            $('#txtcatid option').removeAttr('selected');
+            $("#txtcatid >[value = " + catId + "]").attr("selected","true");
+            $.ajax({
+                url: '/Admin/Categories/Filtter',
+                    datatype: "json",
+                type: "GET",
+                data: {
+                    CatID: catId
+                },
+                async: true,
+                success: function (results) {
+                    if (results.status == "success") {
+                        window.location.href = results.redirectUrl;
+                    }
+                },
+                error: function (xhr) {
+                    alert('error');
+                }
+            });
+
+        });
+
+    });
+    </script>
+}

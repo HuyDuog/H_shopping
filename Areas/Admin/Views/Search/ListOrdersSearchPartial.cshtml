@@ -1,0 +1,42 @@
+﻿@model List<Orders>
+@if (Model != null)
+{
+    foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.OrderId
+            </td>
+            <td>@item.OrderDate</td>
+            <td>
+                @item.PaymentDate
+            </td>
+            <td> @item.TotalMoney</td>
+
+
+            <td>
+                @if (item.Paid == true)
+                {<div class="d-flex align-items-center">
+                        <div class="badge badge-success badge-dot m-r-5"></div>
+                        <div>Đã thanh toán</div>
+                    </div>}
+                else
+                {
+                    <div class="d-flex align-items-center justify-content-start">
+                        <div class="badge badge-danger badge-dot m-r-5 "></div>
+                        <div>Chưa thanh toán</div>
+                    </div>
+                }
+
+            </td>
+            <td>
+                @item.Note
+            </td>
+            <td class="text-right">
+                <a class="btn btn-primary btn-tone m-r-5 " role="button" asp-action="Edit" asp-route-id="@item.OrderId" asp-area="Admin" asp-controller="Orders">Edit</a>
+                <a class="btn btn-secondary btn-tone m-r-5 " role="button" asp-action="Details" asp-route-id="@item.OrderId" asp-area="Admin" asp-controller="Orders">Details</a>
+                <a class="btn btn-success btn-tone m-r-5" role="button" asp-action="Delete" asp-route-id="@item.OrderId" asp-area="Admin" asp-controller="Orders">Delete</a>
+            </td>
+        </tr>
+    }
+}

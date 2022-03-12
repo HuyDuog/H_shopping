@@ -1,0 +1,24 @@
+﻿@model List<Customers>
+@if (Model != null)
+{
+    foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.CustomerId
+            </td>
+            <td>
+                @item.FullName
+            </td>
+            <td>@item.Birthday</td>
+            <td>@item.Email</td>
+            <td>@item.Phone</td>
+            <td>@item.LastLogin</td>
+            <td class="text-right">
+                <a class="btn btn-primary btn-tone m-r-5" role="button" asp-action="Edit" asp-route-id="@item.CustomerId" asp-area="Admin" asp-controller="Customers">Edit</a>
+                <a class="btn btn-secondary btn-tone m-r-5" role="button" asp-action="Details" asp-route-id="@item.CustomerId" asp-area="Admin" asp-controller="Customers">Details</a>
+                <a class="btn btn-success btn-tone m-r-5" role="button" asp-action="Delete" asp-route-id="@item.CustomerId" asp-area="Admin" asp-controller="Customers">Delete</a>
+            </td>
+        </tr>
+    }
+}
